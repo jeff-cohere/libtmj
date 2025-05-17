@@ -96,6 +96,21 @@ void test_zlib_decode(void) {
     free(msg_zlib_decompressed);
     free(msg_gzip_decompressed);
 }
+
+void test_zlib_encode(void) {
+    const char* msg_zlib = "This is another test string!";
+
+    size_t compressed_size_zlib = 0;
+    uint8_t* msg_zlib_compressed = tmj_zlib_compress((uint8_t*)msg_zlib, 29, -1, &compressed_size_zlib);
+
+    char* out = tmj_b64_encode((uint8_t*)msg_zlib_compressed, compressed_size_zlib);
+    TEST_ASSERT_NOT_NULL(out);
+    free(msg_zlib_compressed);
+
+    TEST_ASSERT_EQUAL_STRING("eJwLycgsVgCixLz8kozUIoWS1OISheKSosy8dEUGAKBMCl4=", out);
+
+    free(out);
+}
 #endif
 
 #ifdef LIBTMJ_ZSTD
@@ -123,6 +138,7 @@ int main(void) {
     RUN_TEST(test_b64_encode);
 #ifdef LIBTMJ_ZLIB
     RUN_TEST(test_zlib_decode);
+    RUN_TEST(test_zlib_encode);
 #endif
 #ifdef LIBTMJ_ZSTD
     RUN_TEST(test_zstd_decode);
