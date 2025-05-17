@@ -299,7 +299,7 @@ uint8_t* tmj_zlib_compress(const uint8_t* data, size_t data_size, int level, siz
 
                     realloc_scale++;
                 } else { // finished!
-                  flush = Z_FINISH;
+                    flush = Z_FINISH;
                 }
 
                 break;
@@ -483,26 +483,26 @@ char* tmj_b64_encode(uint8_t* data, size_t size) {
         return NULL;
     }
 
-      size_t enc_size = b64_encoded_size(size);
-      char *out = malloc(enc_size+1);
-      out[enc_size] = '\0';
+    size_t enc_size = b64_encoded_size(size);
+    char *out = malloc(enc_size+1);
+    out[enc_size] = '\0';
 
     for (size_t i = 0, j = 0; i < size; i += 3, j += 4) {
         size_t v = data[i];
         v = i + 1 < size ? v << 8 | data[i + 1] : v << 8;
         v = i + 2 < size ? v << 8 | data[i + 2] : v << 8;
 
-        out[j]   = b64_encode_table[(v >> 18) & 0x3F];
+        out[j] = b64_encode_table[(v >> 18) & 0x3F];
         out[j + 1] = b64_encode_table[(v >> 12) & 0x3F];
         if (i + 1 < size) {
-          out[j + 2] = b64_encode_table[(v >> 6) & 0x3F];
+            out[j + 2] = b64_encode_table[(v >> 6) & 0x3F];
         } else {
-          out[j + 2] = '=';
+            out[j + 2] = '=';
         }
         if (i + 2 < size) {
-          out[j+3] = b64_encode_table[v & 0x3F];
+            out[j+3] = b64_encode_table[v & 0x3F];
         } else {
-          out[j+3] = '=';
+            out[j+3] = '=';
         }
     }
 
