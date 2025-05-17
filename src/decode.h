@@ -54,6 +54,18 @@ uint8_t* tmj_zlib_decompress(const uint8_t* data, size_t data_size, size_t* deco
 
 /**
  * @ingroup decode
+ * Encodes a base64 string.
+ *
+ * @param data An array of unsigned bytes.
+ * @param size The length of the array.
+ *
+ * @return On success, returns a dynamically-allocated null-terminated base64 string.
+ * The returned array must be freed by the caller.
+ */
+char* tmj_b64_encode(uint8_t* data, size_t size);
+
+/**
+ * @ingroup decode
  * Decodes a base64 string.
  *
  * @param data A null-terminated base64 string.

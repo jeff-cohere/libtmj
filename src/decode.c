@@ -276,14 +276,6 @@ bool b64_is_valid_char(char c) {
     return false;
 }
 
-// Don't need this yet, so it'll stay unimplemented for now
-/**
- * Unimplemented, but may be useful to implement in the future.
- */
-char* tmj_b64_encode(uint8_t* data) {
-    return NULL;
-}
-
 uint8_t* tmj_b64_decode(const char* data, size_t* decoded_size) {
     if (data == NULL) {
         logmsg(TMJ_LOG_ERR, "Decode (b64): Unable to decode null input");
@@ -337,6 +329,51 @@ uint8_t* tmj_b64_decode(const char* data, size_t* decoded_size) {
     }
 
     *decoded_size = dSize;
+
+    return out;
+}
+
+size_t b64_encoded_size(size_t inlen) {
+    size_t ret;
+
+    ret = inlen;
+    if (inlen % 3 != 0)
+        ret += 3 - (inlen % 3);
+    ret /= 3;
+    ret *= 4;
+
+    return ret;
+}
+
+char* tmj_b64_encode(uint8_t* data, size_t size) {
+    if (data == NULL || size == 0) {
+        logmsg(TMJ_LOG_ERR, "Encode (b64): Unable to encode null input");
+
+        return NULL;
+    }
+
+      size_t enc_size = b64_encoded_size(size);
+      char *out = malloc(enc_size+1);
+      out[enc_size] = '\0';
+
+    for (size_t i = 0, j = 0; i < size; i += 3, j += 4) {
+        size_t v = data[i];
+        v = i + 1 < size ? v << 8 | data[i + 1] : v << 8;
+        v = i + 2 < size ? v << 8 | data[i + 2] : v << 8;
+
+        out[j]   = b64_encode_table[(v >> 18) & 0x3F];
+        out[j + 1] = b64_encode_table[(v >> 12) & 0x3F];
+        if (i + 1 < size) {
+          out[j + 2] = b64_encode_table[(v >> 6) & 0x3F];
+        } else {
+          out[j + 2] = '=';
+        }
+        if (i + 2 < size) {
+          out[j+3] = b64_encode_table[v & 0x3F];
+        } else {
+          out[j+3] = '=';
+        }
+    }
 
     return out;
 }

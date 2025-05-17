@@ -51,6 +51,20 @@ void test_b64_decode(void) {
     free(out2);
 }
 
+void test_b64_encode(void) {
+    const char* msg = "This is a test string";
+    const char* msg2 = "This is another test string!";
+
+    char* out = tmj_b64_encode((uint8_t*)msg, 22);
+    char* out2 = tmj_b64_encode((uint8_t*)msg2, 29);
+
+    TEST_ASSERT_EQUAL_STRING("VGhpcyBpcyBhIHRlc3Qgc3RyaW5nAA==", out);
+    TEST_ASSERT_EQUAL_STRING("VGhpcyBpcyBhbm90aGVyIHRlc3Qgc3RyaW5nIQA=", out2);
+
+    free(out);
+    free(out2);
+}
+
 #ifdef LIBTMJ_ZLIB
 void test_zlib_decode(void) {
     const char* msg_zlib = "eJwLycgsVgCixLz8kozUIoWS1OISheKSosy8dEUGAKBMCl4=";
@@ -106,6 +120,7 @@ void test_zstd_decode(void) {
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(test_b64_decode);
+    RUN_TEST(test_b64_encode);
 #ifdef LIBTMJ_ZLIB
     RUN_TEST(test_zlib_decode);
 #endif
