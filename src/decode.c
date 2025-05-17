@@ -484,7 +484,7 @@ char* tmj_b64_encode(uint8_t* data, size_t size) {
     }
 
     size_t enc_size = b64_encoded_size(size);
-    char *out = malloc(enc_size+1);
+    char* out = malloc(enc_size + 1);
     out[enc_size] = '\0';
 
     for (size_t i = 0, j = 0; i < size; i += 3, j += 4) {
@@ -500,9 +500,9 @@ char* tmj_b64_encode(uint8_t* data, size_t size) {
             out[j + 2] = '=';
         }
         if (i + 2 < size) {
-            out[j+3] = b64_encode_table[v & 0x3F];
+            out[j + 3] = b64_encode_table[v & 0x3F];
         } else {
-            out[j+3] = '=';
+            out[j + 3] = '=';
         }
     }
 
